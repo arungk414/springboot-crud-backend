@@ -4,6 +4,14 @@ pipeline {
         DOCKER_HOST = 'unix:///var/run/docker.sock'  // for docker commands
     }
     stages {
+	
+	stages {
+       
+        stage('Clean Workspace') {
+            steps {
+                cleanWs() 
+            }
+        }
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/arungk414/springboot-crud-backend.git'
