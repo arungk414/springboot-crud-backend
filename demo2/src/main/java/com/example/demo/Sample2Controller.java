@@ -18,7 +18,7 @@ public class Sample2Controller {
 
     @GetMapping("allQuestion2")
     public String getQuestions() {
-        return "hai from service 2 demo";
+        return "hai from service 2 demo by arun gk new build";
     }
 
 }
