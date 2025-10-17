@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   eureka-server:
     build: ./EurekaServer
@@ -21,3 +20,22 @@ services:
       - "8082:8080"
     depends_on:
       - eureka-server
+    
+  jenkins:
+    build:
+      context: ./jenkins
+    container_name: jenkins
+    ports:
+      - "8083:8080"      # changed from 8081
+      - "50000:50000"
+    user: root
+    volumes:
+      - D:\arun:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins_network
+    restart: unless-stopped
+
+networks:
+  jenkins_network:
+    driver: bridge

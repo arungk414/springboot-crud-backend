@@ -1,68 +1,27 @@
 pipeline {
-    agent any  // Use the Jenkins node (container) directly
-    environment {
-        DOCKER_HOST = 'unix:///var/run/docker.sock'  // for docker commands
-    }
+    agent any
     stages {
-	
-	stages {
-       
-        stage('Clean Workspace') {
-            steps {
-                cleanWs() 
-            }
-        }
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/arungk414/springboot-crud-backend.git'
             }
         }
-
-        stage('Build EurekaServer') {
+        stage('Build') {
             steps {
-                dir('EurekaServer') {
-                    sh 'mvn clean package -DskipTests'
-                }
+                sh 'mvn clean package -DskipTests'
             }
         }
-
-        stage('Build Demo Service') {
-            steps {
-                dir('demo') {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }
-
-        stage('Build Demo2 Service') {
-            steps {
-                dir('demo2') {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }
-
-        stage('Build Docker Images') {
+        stage('Docker Build') {
             steps {
                 sh 'docker build -t eurekaserver ./EurekaServer'
                 sh 'docker build -t demo ./demo'
                 sh 'docker build -t demo2 ./demo2'
             }
         }
-
-        stage('Run Containers') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }
-    }
-
+    } // stages closed
     post {
         always {
-            echo 'Pipeline finished.'
+            echo 'Pipeline finished'
         }
-        failure {
-            echo 'Pipeline failed.'
-        }
-    }
-}
+    } // post closed
+} // pipeline closed
